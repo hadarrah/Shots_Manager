@@ -41,6 +41,12 @@ def status():
         now = datetime.datetime.now()
         user = getpass.getuser()
 
+        # validate if Name is not empty
+        if name_is_empty(request.post_vars.Name):
+            response.flash = T('You cannot add shot with empty name!')
+            rows = db(db.shots).select(orderby=db.shots.Name)
+            return locals()
+
         # validate if Number of Frames is integer
         if not number_of_frames_is_int(request.post_vars.Number_of_Frames):
             response.flash = T('You must insert a positive value in Number of Frames field!')
@@ -75,6 +81,14 @@ def update_record(current_time, user):
     """
     db(db.shots.Name == request.post_vars.Name).update(Number_of_Frames = request.post_vars.Number_of_Frames, Modified_Date = current_time, Modified_By = user, Status = request.post_vars.Status, Is_Active = request.post_vars.Is_Active, Description = request.post_vars.Description)
     response.flash = T('The record updated successfully')
+
+def name_is_empty(input):
+    """
+    Validate Name input.
+    """
+    if not input:
+        return True
+    return False
 
 def number_of_frames_is_int(input):
     """
