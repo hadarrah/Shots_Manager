@@ -1,0 +1,293 @@
+{{extend 'layout.html'}}
+<style>
+    /* Style the tab */
+.tab {
+  float: left;
+  border: 1px solid #ccc;
+  background-color: #404040;
+  width: 15%;
+  height: 500px;
+  position: absolute;
+  left: 20%;
+}
+
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+  display: block;
+  background-color: #404040;
+  color: black;
+  padding: 22px 16px;
+  width: 100%;
+  border: none;
+  outline: none;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #aaa;
+}
+
+/* Create an active/current "tab button" class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Change background color of subbmit buttons on hover */
+input[type="submit"]:hover {
+  background-color: #aaa;
+}
+
+/* Create an active/current submmit button class */
+input[type="submit"]:active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  float: left;
+  padding: 0px 12px;
+  background-color: #404040;
+  border: 1px solid #ccc;
+  width: 50%;
+  border-left: none;
+  height: 500px;
+  left: 34%;
+  position: relative;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 1em;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/*Create template for all input cells in form*/
+.inputCell{
+    background-color: #585858;
+    font-size: 20;
+    color: #ffffff;
+    border: none;
+    text-align:center;
+    border-radius: 5px;
+}
+
+textarea {
+    background-color: #585858;
+    font-size: 20;
+    color: #ffffff;
+    border: none;
+    resize: none;
+    border-radius: 5px;
+}
+
+
+table{
+    width: 70%;
+    height: 500px;
+    position: relative;
+    left: 15%;
+}
+
+td {
+    color: #ffffff;
+    font-weight: bold;
+}
+
+/*The elements below help us to define a new style for checkbox*/
+/* The container */
+.container {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 15px;
+  width: 15px;
+  background-color: #000;
+}
+
+/* On mouse-over, add a grey background color */
+.container:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.container input:checked ~ .checkmark {
+  background-color: #000;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.container .checkmark:after {
+  left: 5px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+</style>
+<h1 align='center'>Shots Manager</h1>
+
+<div class="tab" style="overflow-y: scroll;">
+    {{for row in rows:}}
+    <button class="tablinks" onclick="location.href='/{{=request.application}}/{{=request.controller}}/status/{{=row.id}}'">
+        <font color="{{=status_colors[row.Status]}}">
+            <b>{{=row.Name}}</b>
+        </font>
+    </button>
+    {{pass}}
+</div>
+
+<div class="tabcontent">
+    <form method='post'>
+        <table>
+            <tr>
+                <td colspan="3" style="padding: 7% 0%;">
+                </td>
+            </tr>
+            <tr height="10%">
+                <td>
+                     <font style="width: 35%;">Name</font> <input type='text' class="inputCell" style="width: 65%" name='Name' value='{{=row_to_display.Name}}'>
+                </td>
+                <td width="30%">
+                    Modified Date
+                </td>
+                <td>
+                    <input type='text' class="inputCell" style="width: 100%" disabled name='Modified_Date' value="{{=row_to_display.Modified_Date.strftime('%d.%m.%y')}}">
+                </td>
+            </tr>
+            <tr height="10%">
+                <td>
+                    <font style="width: 73%;">Number of Frames</font> <input type='number' class="inputCell" style="width: 27%" name='Number_of_Frames' value='{{=row_to_display.Number_of_Frames}}'>
+                </td>
+                <td>
+                    Modified By
+                </td>
+                <td>
+                    <input type='text' class="inputCell" style="width: 100%" disabled name='Modified_By' value='{{=row_to_display.Modified_By}}'>
+                </td>
+            </tr>
+            <tr height="10%">
+                <td>
+                    <font style="width: 35%;">Status</font> <select name="Status" class="inputCell" style="color: {{=status_colors[row_to_display.Status]}}; width: 65%" onchange="this.style.color = this.options[this.selectedIndex].style.color;">
+                                  {{if row_to_display.Status == "Not started":}}
+                                    <option value="Not started" selected style="color: {{=status_colors['Not started']}};">Not started</option>
+                                  {{else:}}
+                                    <option value="Not started" style="color: {{=status_colors['Not started']}};">Not started</option>
+                                  {{pass}}
+                    
+                                  {{if row_to_display.Status == "WIP":}}
+                                    <option value="WIP" selected style="color:{{=status_colors['WIP']}};">WIP</option>
+                                  {{else:}}
+                                    <option value="WIP" style="color:{{=status_colors['WIP']}};">WIP</option>
+                                  {{pass}}
+                    
+                                  {{if row_to_display.Status == "Need Fixing":}}
+                                    <option value="Need Fixing" selected style="color:{{=status_colors['Need Fixing']}};">Need Fixing</option>
+                                  {{else:}}
+                                    <option value="Need Fixing" style="color:{{=status_colors['Need Fixing']}};">Need Fixing</option>
+                                  {{pass}}
+                    
+                                  {{if row_to_display.Status == "Failed QA":}}
+                                    <option value="Failed QA" selected style="color:{{=status_colors['Failed QA']}};">Failed QA</option>
+                                  {{else:}}
+                                    <option value="Failed QA" style="color:{{=status_colors['Failed QA']}};">Failed QA</option>
+                                  {{pass}}
+                    
+                                  {{if row_to_display.Status == "Rendered":}}
+                                    <option value="Rendered" selected style="color:{{=status_colors['Rendered']}};">Rendered</option>
+                                  {{else:}}
+                                    <option value="Rendered" style="color:{{=status_colors['Rendered']}};">Rendered</option>
+                                  {{pass}}
+                    
+                                  {{if row_to_display.Status == "Done":}}
+                                    <option value="Done" selected style="color:{{=status_colors['Done']}};">Done</option>
+                                  {{else:}}
+                                    <option value="Done" style="color:{{=status_colors['Done']}};">Done</option>
+                                  {{pass}}
+                    
+                                  {{if row_to_display.Status == "Deleted":}}
+                                    <option value="Deleted" selected style="color:{{=status_colors['Deleted']}};">Deleted</option>
+                                  {{else:}}
+                                    <option value="Deleted" style="color:{{=status_colors['Deleted']}};">Deleted</option>
+                                  {{pass}}
+                            </select>
+                </td>
+                <td>
+                    Active
+                </td>
+                <td>
+                    <label class="container">
+                    {{if row_to_display.Is_Active:}}<input type="checkbox" name="Is_Active" checked>
+                    {{else:}}<input type="checkbox" name="Is_Active">{{pass}}
+                        <span class="checkmark"></span>
+                        </label>
+                </td>
+            </tr>
+            <tr height="30%">
+                <td colspan="3" >
+                    <font style="width: 25%; vertical-align: top;">Description</font> <textarea name='Description' style="width: 75%; height: 60%;">{{=row_to_display.Description}}</textarea>
+                </td>
+            </tr>
+            <tr height="40%">
+                <td colspan="3" align="center">
+                    <input type='submit' class="inputCell" value='submit'>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
