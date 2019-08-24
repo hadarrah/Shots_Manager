@@ -193,7 +193,7 @@ td {
 </div>
 
 <div class="tabcontent">
-    <form method='post'>
+    <form enctype="multipart/form-data" action="{{=URL()}}" method='post'>
         <table>
             <tr>
                 <td colspan="3" style="padding: 7% 0%;">
@@ -227,48 +227,14 @@ td {
                 <td>
                     <font style="width: 35%;">Status</font>
                     <select name="Status" class="inputCell" style="color: {{=status_colors[row_to_display.Status]}}; width: 65%" onchange="this.style.color = this.options[this.selectedIndex].style.color;">
-                                  {{if row_to_display.Status == "Not started":}}
-                                    <option value="Not started" selected style="color: {{=status_colors['Not started']}};">Not started</option>
-                                  {{else:}}
-                                    <option value="Not started" style="color: {{=status_colors['Not started']}};">Not started</option>
-                                  {{pass}}
-                    
-                                  {{if row_to_display.Status == "WIP":}}
-                                    <option value="WIP" selected style="color:{{=status_colors['WIP']}};">WIP</option>
-                                  {{else:}}
-                                    <option value="WIP" style="color:{{=status_colors['WIP']}};">WIP</option>
-                                  {{pass}}
-                    
-                                  {{if row_to_display.Status == "Need Fixing":}}
-                                    <option value="Need Fixing" selected style="color:{{=status_colors['Need Fixing']}};">Need Fixing</option>
-                                  {{else:}}
-                                    <option value="Need Fixing" style="color:{{=status_colors['Need Fixing']}};">Need Fixing</option>
-                                  {{pass}}
-                    
-                                  {{if row_to_display.Status == "Failed QA":}}
-                                    <option value="Failed QA" selected style="color:{{=status_colors['Failed QA']}};">Failed QA</option>
-                                  {{else:}}
-                                    <option value="Failed QA" style="color:{{=status_colors['Failed QA']}};">Failed QA</option>
-                                  {{pass}}
-                    
-                                  {{if row_to_display.Status == "Rendered":}}
-                                    <option value="Rendered" selected style="color:{{=status_colors['Rendered']}};">Rendered</option>
-                                  {{else:}}
-                                    <option value="Rendered" style="color:{{=status_colors['Rendered']}};">Rendered</option>
-                                  {{pass}}
-                    
-                                  {{if row_to_display.Status == "Done":}}
-                                    <option value="Done" selected style="color:{{=status_colors['Done']}};">Done</option>
-                                  {{else:}}
-                                    <option value="Done" style="color:{{=status_colors['Done']}};">Done</option>
-                                  {{pass}}
-                    
-                                  {{if row_to_display.Status == "Deleted":}}
-                                    <option value="Deleted" selected style="color:{{=status_colors['Deleted']}};">Deleted</option>
-                                  {{else:}}
-                                    <option value="Deleted" style="color:{{=status_colors['Deleted']}};">Deleted</option>
-                                  {{pass}}
-                            </select>
+                        {{for status in status_colors.keys():}}
+                            {{if row_to_display.Status == status:}}
+                                <option value="{{=status}}" selected style="color: {{=status_colors[status]}};">{{=status}}</option>
+                            {{else:}}
+                                <option value="{{=status}}" style="color: {{=status_colors[status]}};">{{=status}}</option>
+                            {{pass}}
+                        {{pass}}
+                    </select>
                 </td>
                 <td>
                     Active
